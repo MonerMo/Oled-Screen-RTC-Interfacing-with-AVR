@@ -40,6 +40,6 @@ GUI Code is in a separate repository on my github profile here is a link to it *
 :framed_picture:	
 ### Program Flow and snapshots from the project
 ![](https://i.imgur.com/kPAFVg3.png)
-![](https://i.imgur.com/HlM1la5.png)
+![](https://i.imgur.com/JlLzfgl.png)
 ![](https://i.imgur.com/kVWSlAo.png)
 
