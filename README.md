@@ -3,14 +3,16 @@
 
 >This project have a modified version that includes Integration with Qt , Studying slots and exporting studying hours and minutes to a text file this version is a branch from the master.
 > you can go to it from here  **[GUI Integration Version](https://github.com/MonerMo/Oled-Screen-RTC-Interfacing-with-AVR/tree/MasterVersion%2BGUI_Integration)**. :paintbrush:
+---
 
 ## GUI Code
 GUI Code is in a separate repository on my github profile here is a link to it **[GUI Code using QT repository](https://github.com/MonerMo/QT-GUI-Interface-for-OLED-Screen-RTC-Interfacing-Project)** 
----
+
 ## This Project was inspired from the small and minimal desktop cubes that tell you the time and play music for you. I was Inpired to make this project on AVR-ATmega32 micro-controller and have the following functionalities :
 1) Real Time Clock and Clock Adjustments.
 2) Study Timer for Studying Sessions.
 3) Digital ON/OFF control for Desk Lamp.
+
 ---
 :electric_plug:	
 ### In order to acheive the following I used the following hardware : 
@@ -20,6 +22,7 @@ GUI Code is in a separate repository on my github profile here is a link to it *
 4) External EEPROM 24C08B
 5) Internal EEPROM for Atmega32
 6) External Push Buttons
+
 ---
 
 ### For Communication Protcols & Peripherals :
@@ -27,6 +30,7 @@ GUI Code is in a separate repository on my github profile here is a link to it *
 2) UART
 3) Timer 0
 4) DIO
+   
 ---
 :clapper:	
 ### Video Explaining and Demonstrating the Project :
