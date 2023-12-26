@@ -215,11 +215,15 @@ void button_init(void){
 	DIO_SetPinDirection(DIO_PORTC, DIO_PIN3, DIO_PIN_DIR_OUTPUT);
 	DIO_SetPinDirection(DIO_PORTC, DIO_PIN4, DIO_PIN_DIR_OUTPUT);
 	DIO_SetPinDirection(DIO_PORTC, DIO_PIN5, DIO_PIN_DIR_OUTPUT);
+	DIO_SetPinDirection(DIO_PORTC, DIO_PIN6, DIO_PIN_DIR_OUTPUT);
+
 
 	//Set the values to HIGH
 	DIO_SetPinValue(DIO_PORTC,DIO_PIN3,DIO_PIN_VAL_HIGH);
 	DIO_SetPinValue(DIO_PORTC,DIO_PIN4,DIO_PIN_VAL_HIGH);
 	DIO_SetPinValue(DIO_PORTC,DIO_PIN5,DIO_PIN_VAL_HIGH);
+	DIO_SetPinValue(DIO_PORTC,DIO_PIN6,DIO_PIN_VAL_HIGH);
+
 }
 
 /****************************************************************************/
@@ -228,7 +232,7 @@ uint8 button_check(void){
 	uint8 which_button = 0 ;
 
 	//now we want to loop over the pins 3,4,5 and set each one to low and check if pin2 get LOW value.
-	for(uint8 COL_PIN = 3 ; COL_PIN <= 5 ; COL_PIN++){
+	for(uint8 COL_PIN = 3 ; COL_PIN <= 6 ; COL_PIN++){
 		uint8 button_pressed = 1 ;
 
 		DIO_SetPinValue(DIO_PORTC,COL_PIN,DIO_PIN_VAL_LOW);
@@ -1359,7 +1363,7 @@ uint8 study_timer(void){
 		if(which_button == 3){
 			//this means that we pressed left
 			//check if we stopping at letter a
-			if(slot_tracker == 0){
+			if(slot_tracker == 1){
 				slot_tracker = 3 ;
 				number_write(1,85,slot_tracker);
 			}else{
@@ -1472,8 +1476,6 @@ uint8 study_timer(void){
 	uint8 hours_holder = ((slot_val & 0b11100000) + studied_mins ) / 60 ;
 	slot_val = hours_holder | mins_holder ;
 
-	UART_Init();
-	UART_Tx(slot_val);
 
 	//now send it again to the memory
 	I2C_Init();
@@ -1535,6 +1537,41 @@ uint8 main_menu(void){
 				menu_tracker++ ;
 				color_choice_black(menu_tracker-1);
 				color_choice_white(menu_tracker);
+			}
+		}else if(which_button == 6){
+			uint8 targeted_address = 0 ;
+			uint8 mem_page_address_read = 0 ;
+			uint8 mem_page_address_write = 0 ;
+			for(uint8 i = 1 ; i <= 3 ; i++){
+				if(i == 1){
+					targeted_address = 0xFE ;
+					mem_page_address_write = 0b10101010 ;
+					mem_page_address_read = 0b10101011 ;
+				}else if(i == 2){
+					targeted_address = 0xFF ;
+					mem_page_address_write = 0b10101010 ;
+					mem_page_address_read = 0b10101011 ;
+				}else if(i == 3){
+					targeted_address = 0x00 ;
+					mem_page_address_write = 0b10101100 ;
+					mem_page_address_read = 0b10101101 ;
+				}
+
+				//now read from the memory
+				I2C_Init();
+				I2C_Start(mem_page_address_write);
+				I2C_Write(targeted_address);
+				I2C_Repeated_Start(mem_page_address_read);
+				uint8 slot_val = I2C_Read_NACK();
+				I2C_Stop();
+
+				//now make operation on the slot_val
+				uint8 mins_holder = ((slot_val & 0b00011111) % 60 );
+				uint8 hours_holder = ((slot_val & 0b11100000) / 60 );
+				slot_val = hours_holder | mins_holder ;
+
+				UART_Init();
+				UART_Tx(slot_val);
 			}
 		}
 	}while(which_button != 5);

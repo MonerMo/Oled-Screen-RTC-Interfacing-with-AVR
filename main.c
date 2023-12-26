@@ -22,6 +22,8 @@ int main(){
 	DIO_SetPinDirection(DIO_PORTC,DIO_PIN7,DIO_PIN_DIR_OUTPUT);
 
 
+
+
 	uint8 setup_done_correctly = 0;
 	if(boot_check() == 0xFF){
 		//first time booting up
