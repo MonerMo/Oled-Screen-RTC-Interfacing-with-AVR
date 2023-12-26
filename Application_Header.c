@@ -1297,6 +1297,14 @@ uint8 study_timer(void){
 	}
 	I2C_Stop();
 
+	//writing slot
+	letter_write(1,50,18);
+	letter_write(1,57,11);
+	letter_write(1,64,14);
+	letter_write(1,71,19);
+
+	number_write(1,85,1);
+
 
 	uint8 timer_tracker = 0 ;
 	uint8 which_button = 0 ;
@@ -1308,27 +1316,74 @@ uint8 study_timer(void){
 			//this means that we pressed left
 			//check if we stopping at letter a
 			if(timer_tracker == 0){
-				timer_tracker = 95 ;
+				timer_tracker = 99 ;
 				double_digit_write(4,48,timer_tracker);
 			}else{
-				timer_tracker-=5 ;
+				timer_tracker-- ;
 				double_digit_write(4,48,timer_tracker);
 			}
 
 		}else if(which_button == 4){
 			//this means that we pressed right
 			//check if we stopping at letter z
-			if(timer_tracker == 95){
+			if(timer_tracker == 99){
 				timer_tracker = 0 ;
 				double_digit_write(4,48,timer_tracker);
 			}else{
-				timer_tracker+=5 ;
+				timer_tracker++ ;
 				double_digit_write(4,48,timer_tracker);
 			}
 		}
 
 	}while(which_button != 5);
+	//remove the underline
+	setColumnAddress(48,62);
+	setPageAddress(2,7);
+	I2C_Start(oled_write_address);
+	I2C_Write(CONTROL_DATA);
+	for(uint8 i = 0 ; i < 14 ; i++){
+		I2C_Write(0x00);
+	}
+	I2C_Stop();
 
+
+	/************* Slot choice ****************/
+	which_button = 0 ;
+	uint8 slot_tracker = 1 ;
+
+
+	do{
+		which_button = 0 ;
+		which_button = button_check();
+
+		if(which_button == 3){
+			//this means that we pressed left
+			//check if we stopping at letter a
+			if(slot_tracker == 0){
+				slot_tracker = 3 ;
+				number_write(1,85,slot_tracker);
+			}else{
+				slot_tracker-- ;
+				number_write(1,85,slot_tracker);
+			}
+
+		}else if(which_button == 4){
+			if(slot_tracker == 3){
+				slot_tracker = 1 ;
+				number_write(1,85,slot_tracker);
+			}else{
+				slot_tracker++ ;
+				number_write(1,85,slot_tracker);
+			}
+		}
+
+	}while(which_button != 5);
+
+
+
+
+
+	/******************************************/
 	//here we will black entire screen and print a studying motive and then start the timer.
 	black_entire_screen();
 
@@ -1361,11 +1416,73 @@ uint8 study_timer(void){
 	}
 	I2C_Stop();
 
+
+	//now after taking the slot from earlier on in this function we want to read the specific
+	//slot in memory depend on the choice after that , each minute we want to change the value of the
+	//session each slot have a byte to store 0b 000(hours) 00000(minutes)
+	//if the minutes bits reached to 60 then we add it to hours and reset them back to zeros
+	//i know by designing it this way we will have a limit of 15 hours for each section
+	//but why not :P
+
+	//for slot 1 ---> 0x1FE , for slot 2 ---> 0x1FF , for slot 3 ---> 0x200
+	//Alogrithm :
+	//1) read the data depend on the slot choice
+	//2) have a counter to count the minutes studied in the session
+	//3) add the minutes to the current stored minutes
+	//4) whole_minute / 60 --> add this value to the hours
+	//5) store in minutes ---> whole_minutes % 60
+
+
+	uint8 studied_mins = 0 ;
 	while(timer_tracker ){
 		minute_delay();
+		studied_mins++ ;
 		timer_tracker--;
 		double_digit_write(4,48,timer_tracker);
 	}
+
+	uint8 targeted_address = 0 ;
+	uint8 mem_page_address_read = 0 ;
+	uint8 mem_page_address_write = 0 ;
+
+	if(slot_tracker == 1){
+		targeted_address = 0xFE ;
+		mem_page_address_write = 0b10101010 ;
+		mem_page_address_read = 0b10101011 ;
+	}else if(slot_tracker == 2){
+		targeted_address = 0xFF ;
+		mem_page_address_write = 0b10101010 ;
+		mem_page_address_read = 0b10101011 ;
+	}else if(slot_tracker == 3){
+		targeted_address = 0x00 ;
+		mem_page_address_write = 0b10101100 ;
+		mem_page_address_read = 0b10101101 ;
+	}
+
+	//now read from the memory
+	I2C_Init();
+	I2C_Start(mem_page_address_write);
+	I2C_Write(targeted_address);
+	I2C_Repeated_Start(mem_page_address_read);
+	uint8 slot_val = I2C_Read_NACK();
+	I2C_Stop();
+
+	//now make operation on the slot_val
+	uint8 mins_holder = ((slot_val & 0b00011111) + studied_mins ) % 60 ;
+	uint8 hours_holder = ((slot_val & 0b11100000) + studied_mins ) / 60 ;
+	slot_val = hours_holder | mins_holder ;
+
+	UART_Init();
+	UART_Tx(slot_val);
+
+	//now send it again to the memory
+	I2C_Init();
+	I2C_Start(mem_page_address_write);
+	I2C_Write(targeted_address);
+	I2C_Write(slot_val);
+	I2C_Stop();
+
+
 
 	//session finished
 	return 1 ;

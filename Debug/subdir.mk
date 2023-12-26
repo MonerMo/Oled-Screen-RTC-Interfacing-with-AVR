@@ -17,16 +17,9 @@ C_SRCS += \
 ../Timer0.c \
 ../Timer1.c \
 ../UART.c \
-../croutine.c \
 ../ds3231.c \
-../heap_4.c \
-../list.c \
 ../main.c \
-../port.c \
-../queue.c \
-../ssd1306.c \
-../tasks.c \
-../timers.c 
+../ssd1306.c 
 
 OBJS += \
 ./ADC.o \
@@ -42,16 +35,9 @@ OBJS += \
 ./Timer0.o \
 ./Timer1.o \
 ./UART.o \
-./croutine.o \
 ./ds3231.o \
-./heap_4.o \
-./list.o \
 ./main.o \
-./port.o \
-./queue.o \
-./ssd1306.o \
-./tasks.o \
-./timers.o 
+./ssd1306.o 
 
 C_DEPS += \
 ./ADC.d \
@@ -67,16 +53,9 @@ C_DEPS += \
 ./Timer0.d \
 ./Timer1.d \
 ./UART.d \
-./croutine.d \
 ./ds3231.d \
-./heap_4.d \
-./list.d \
 ./main.d \
-./port.d \
-./queue.d \
-./ssd1306.d \
-./tasks.d \
-./timers.d 
+./ssd1306.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
