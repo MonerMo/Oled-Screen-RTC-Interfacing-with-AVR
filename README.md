@@ -1,4 +1,4 @@
-#Oled Screen + RTC Interfacing with AVR ( Study table project ) :man_technologist:	
+# Oled Screen + RTC Interfacing with AVR ( Study table project ) :man_technologist:	
 
 
 >This project have a modified version that includes Integration with Qt , Studying slots and exporting studying hours and minutes to a text file this version is a branch from the master.
@@ -27,9 +27,12 @@
 ---
 :clapper:	
 ### Video Explaining and Demonstrating the Project :
-[![IMAGE ALT TEXT HERE](https://i.imgur.com/rJUULNz.png)](https://youtu.be/L5WNNWhqh4I)
+[![IMAGE ALT TEXT HERE](https://i.imgur.com/HlM1la5.png)](https://youtu.be/L5WNNWhqh4I)
 ---
 :framed_picture:	
 ### Program Flow and snapshots from the project
-![](https://i.imgur.com/HlM1la5.png) 
+![](https://i.imgur.com/kPAFVg3.png)
+![](https://i.imgur.com/HlM1la5.png)
+![](https://i.imgur.com/JlLzfgl.png)
+![](https://i.imgur.com/kVWSlAo.png)
 
