@@ -34,12 +34,12 @@ GUI Code is in a separate repository on my github profile here is a link to it *
 ---
 :clapper:	
 ### Video Explaining and Demonstrating the Project :
+##CLICK ON THE IMAGE TO REDIRECT YOU TO THE YOUTUBE VIDEO.
 [![IMAGE ALT TEXT HERE](https://i.imgur.com/HlM1la5.png)](https://youtu.be/L5WNNWhqh4I)
 ---
 :framed_picture:	
 ### Program Flow and snapshots from the project
 ![](https://i.imgur.com/kPAFVg3.png)
 ![](https://i.imgur.com/HlM1la5.png)
-![](https://i.imgur.com/JlLzfgl.png)
 ![](https://i.imgur.com/kVWSlAo.png)
 
